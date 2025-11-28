@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Media, SearchResult, OMDbResponse, Season } from '@/types/media';
 
 const OMDB_API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY || '4d2dd959';
-const OMDB_BASE_URL = 'http://www.omdbapi.com/';
+const OMDB_BASE_URL = 'https://www.omdbapi.com/';
 
 class OMDbService {
     private apiKey: string;
