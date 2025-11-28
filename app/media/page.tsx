@@ -51,6 +51,7 @@ function MediaPageContent() {
     const [isListModalOpen, setIsListModalOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isTrailerModalOpen, setIsTrailerModalOpen] = useState(false);
+    const [isWatched, setIsWatched] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -65,6 +66,7 @@ function MediaPageContent() {
                 if (data) {
                     const tid = sutraService.getTrailerId(data.title);
                     setTrailerId(tid);
+                    setIsWatched(libraryService.isWatched(data.imdbID));
                 }
             } catch (error) {
                 console.error('Error fetching media:', error);
@@ -196,21 +198,21 @@ function MediaPageContent() {
                             </button>
                             <button
                                 onClick={() => {
-                                    if (libraryService.isWatched(media.imdbID)) {
+                                    if (isWatched) {
                                         libraryService.removeFromWatched(media.imdbID);
+                                        setIsWatched(false);
                                     } else {
                                         libraryService.markAsWatched(media);
+                                        setIsWatched(true);
                                     }
-                                    // Force re-render to update UI state (simple way for now)
-                                    setMedia({ ...media });
                                 }}
-                                className={`btn p-4 rounded-full backdrop-blur-md transition-all hover:scale-105 border ${libraryService.isWatched(media.imdbID)
+                                className={`btn p-4 rounded-full backdrop-blur-md transition-all hover:scale-105 border ${isWatched
                                     ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)] hover:bg-[var(--color-primary)]/80'
                                     : 'bg-white/10 hover:bg-white/20 text-white border-white/10'
                                     }`}
-                                title={libraryService.isWatched(media.imdbID) ? "Remove from Diary" : "Mark as Watched"}
+                                title={isWatched ? "Remove from Diary" : "Mark as Watched"}
                             >
-                                <Eye className={`w-6 h-6 ${libraryService.isWatched(media.imdbID) ? 'fill-current' : ''}`} />
+                                <Eye className={`w-6 h-6 ${isWatched ? 'fill-current' : ''}`} />
                             </button>
                             <button
                                 onClick={() => setIsShareModalOpen(true)}
